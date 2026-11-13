@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login — Blood Donor Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="container login-box">
+    <div class="card">
+        <h1>Admin login</h1>
+        <p class="muted">Demo app. Password from ADMIN_PASSWORD env var.</p>
+        <div th:if="${param.error}" class="alert err">Invalid username or password.</div>
+        <div th:if="${param.logout}" class="alert ok">Logged out.</div>
+        <form th:action="@{/login}" method="post">
+            <label>Username</label>
+            <input type="text" name="username" required autofocus/>
+            <label>Password</label>
+            <input type="password" name="password" required/>
+            <p style="margin-top:1rem"><button class="btn" type="submit">Sign in</button></p>
+        </form>
+        <p class="muted">All donor rows are synthetic SAMPLE DATA.</p>
+    </div>
+</div>
+</body>
+</html>

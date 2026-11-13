@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Dashboard — Blood Donor Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<nav>
+    <span class="brand">Blood Donor Tracker</span>
+    <a th:href="@{/}">Dashboard</a>
+    <a th:href="@{/donors}">Donors</a>
+    <a th:href="@{/stock}">Stock</a>
+    <a th:href="@{/compatibility}">Compatibility</a>
+    <form th:action="@{/logout}" method="post" style="display:inline;margin:0">
+        <button class="btn secondary" type="submit">Logout</button>
+    </form>
+</nav>
+<div class="container">
+    <div class="alert warn"><strong>Educational project only.</strong> SAMPLE DATA. Not medical advice.</div>
+    <div class="grid">
+        <div class="card"><div class="muted">Total SAMPLE donors</div><div class="metric" th:text="${donorCount}">0</div></div>
+        <div class="card"><div class="muted">Eligible now</div><div class="metric" th:text="${eligibleCount}">0</div></div>
+        <div class="card"><div class="muted">Low stock groups</div><div class="metric" th:text="${#lists.size(lowStock)}">0</div></div>
+        <div class="card"><div class="muted">Expiring soon</div><div class="metric" th:text="${#lists.size(expiring)}">0</div></div>
+    </div>
+    <div class="card"><h2>Stock by blood group</h2><canvas id="stockChart" height="120"></canvas></div>
+    <div class="card" th:if="${!#lists.isEmpty(lowStock)}"><h2>Low stock</h2><ul><li th:each="g : ${lowStock}" th:text="${g.label}"></li></ul></div>
+    <div class="card" th:if="${!#lists.isEmpty(expiring)}"><h2>Expiring soon</h2>
+        <table><thead><tr><th>Group</th><th>Collection</th><th>Expiry</th></tr></thead>
+        <tbody><tr th:each="u : ${expiring}"><td th:text="${u.bloodGroup.label}"></td><td th:text="${u.collectionDate}"></td><td th:text="${u.expiryDate}"></td></tr></tbody></table>
+    </div>
+</div>
+<script th:inline="javascript">
+    const labels = /*[[${stockLabels}]]*/ [];
+    const values = /*[[${stockValues}]]*/ [];
+    new Chart(document.getElementById('stockChart'), {type:'bar',data:{labels:labels,datasets:[{label:'Units',data:values,backgroundColor:'#b71c1c'}]},options:{scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}});
+</script>
+</body>
+</html>
