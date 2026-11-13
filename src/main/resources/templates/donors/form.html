@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Donor form</title><link rel="stylesheet" th:href="@{/css/style.css}"/></head>
+<body>
+<nav><span class="brand">Blood Donor Tracker</span><a th:href="@{/donors}">Donors</a><a th:href="@{/}">Dashboard</a></nav>
+<div class="container"><div class="card">
+<h1 th:text="${donor.id == null} ? 'Add SAMPLE donor' : 'Edit SAMPLE donor'">Donor</h1>
+<div th:if="${error}" class="alert err" th:text="${error}"></div>
+<form th:action="@{/donors}" th:object="${donor}" method="post">
+<input type="hidden" th:field="*{id}"/>
+<label>Name</label><input th:field="*{name}" required/>
+<label>Age</label><input type="number" th:field="*{age}" required min="1" max="120"/>
+<label>Blood group</label>
+<select th:field="*{bloodGroup}" required><option th:each="g : ${bloodGroups}" th:value="${g}" th:text="${g.label}"></option></select>
+<label>Phone (fake)</label><input th:field="*{phone}" required pattern="\\d{5}\\s?\\d{5}"/>
+<label>City</label><input th:field="*{city}" required/>
+<label>Last donation</label><input type="date" th:field="*{lastDonationDate}"/>
+<label><input type="checkbox" th:field="*{available}"/> Available</label>
+<p style="margin-top:1rem"><button class="btn" type="submit">Save</button> <a class="btn secondary" th:href="@{/donors}">Cancel</a></p>
+</form></div></div></body></html>

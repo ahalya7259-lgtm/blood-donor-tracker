@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Donors</title><link rel="stylesheet" th:href="@{/css/style.css}"/></head>
+<body>
+<nav><span class="brand">Blood Donor Tracker</span><a th:href="@{/}">Dashboard</a><a th:href="@{/donors}">Donors</a><a th:href="@{/stock}">Stock</a>
+<form th:action="@{/logout}" method="post" style="display:inline"><button class="btn secondary" type="submit">Logout</button></form></nav>
+<div class="container">
+<div th:if="${message}" class="alert ok" th:text="${message}"></div>
+<div class="card"><h1>Donors <span class="badge sample">SAMPLE DATA</span></h1>
+<form method="get" th:action="@{/donors}" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:end">
+<div><label>Blood group</label><select name="bloodGroup"><option value="">Any</option><option th:each="g : ${bloodGroups}" th:value="${g}" th:text="${g}" th:selected="${g == selectedGroup}"></option></select></div>
+<div><label>City</label><input type="text" name="city" th:value="${selectedCity}"/></div>
+<button class="btn" type="submit">Search</button>
+<a class="btn secondary" th:href="@{/donors/new}">Add donor</a>
+<a class="btn secondary" th:href="@{/donors/export}">CSV</a>
+</form></div>
+<div class="card"><table><thead><tr><th>Name</th><th>Age</th><th>Group</th><th>Phone</th><th>City</th><th>Last</th><th>Available</th><th>Eligible</th><th>Next</th><th></th></tr></thead>
+<tbody><tr th:each="d : ${donors}">
+<td th:text="${d.name}"></td><td th:text="${d.age}"></td><td th:text="${d.bloodGroup.label}"></td><td th:text="${d.phone}"></td><td th:text="${d.city}"></td><td th:text="${d.lastDonationDate}"></td>
+<td><span th:class="${d.available} ? 'badge' : 'badge no'" th:text="${d.available} ? 'Yes' : 'No'"></span></td>
+<td><span th:with="ok=${donorService.isEligible(d)}" th:class="${ok} ? 'badge' : 'badge no'" th:text="${ok} ? 'Eligible' : 'Wait'"></span></td>
+<td th:text="${donorService.nextEligibleDate(d)}"></td>
+<td><a class="btn secondary" th:href="@{/donors/{id}/edit(id=${d.id})}">Edit</a>
+<form th:action="@{/donors/{id}/delete(id=${d.id})}" method="post" style="display:inline" onsubmit="return confirm('Delete SAMPLE donor?');"><button class="btn danger" type="submit">Delete</button></form></td>
+</tr></tbody></table></div></div></body></html>

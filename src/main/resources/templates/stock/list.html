@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Stock</title><link rel="stylesheet" th:href="@{/css/style.css}"/></head>
+<body>
+<nav><span class="brand">Blood Donor Tracker</span><a th:href="@{/}">Dashboard</a><a th:href="@{/donors}">Donors</a><a th:href="@{/stock}">Stock</a>
+<form th:action="@{/logout}" method="post" style="display:inline"><button class="btn secondary" type="submit">Logout</button></form></nav>
+<div class="container">
+<div th:if="${message}" class="alert ok" th:text="${message}"></div>
+<div th:if="${error}" class="alert err" th:text="${error}"></div>
+<div class="card"><h1>Blood stock <span class="badge sample">SAMPLE DATA</span></h1>
+<form th:action="@{/stock}" method="post" style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:end">
+<div><label>Blood group</label><select name="bloodGroup"><option th:each="g : ${bloodGroups}" th:value="${g.label}" th:text="${g.label}"></option></select></div>
+<div><label>Collection</label><input type="date" name="collectionDate" required/></div>
+<div><label>Expiry</label><input type="date" name="expiryDate" required/></div>
+<button class="btn" type="submit">Add unit</button>
+<a class="btn secondary" th:href="@{/stock/export}">CSV</a>
+</form></div>
+<div class="card" th:if="${!#lists.isEmpty(lowStock)}"><h2>Low stock</h2><p th:each="g : ${lowStock}" th:text="${g.label}"></p></div>
+<div class="card"><table><thead><tr><th>ID</th><th>Group</th><th>Collection</th><th>Expiry</th><th></th></tr></thead>
+<tbody><tr th:each="u : ${units}"><td th:text="${u.id}"></td><td th:text="${u.bloodGroup.label}"></td><td th:text="${u.collectionDate}"></td><td th:text="${u.expiryDate}"></td>
+<td><form th:action="@{/stock/{id}/remove(id=${u.id})}" method="post"><button class="btn danger" type="submit">Issue / remove</button></form></td></tr></tbody></table></div>
+</div></body></html>
